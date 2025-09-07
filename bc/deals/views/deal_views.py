@@ -4,10 +4,10 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
 
-from deals.serializers import BusinessConfirmationDealSerializer
+from deals.serializers import NewBusinessConfirmationSerializer
 
 
-class BusinessConfirmationDealView(APIView):
+class NewBusinessConfirmationView(APIView):
     """
     API endpoint that allows deals to be viewed or created.
     """
@@ -15,11 +15,11 @@ class BusinessConfirmationDealView(APIView):
 
     @swagger_auto_schema(
         operation_description="Create a new deal",
-        request_body=BusinessConfirmationDealSerializer,
-        responses={201: BusinessConfirmationDealSerializer}
+        request_body=NewBusinessConfirmationSerializer,
+        responses={201: NewBusinessConfirmationSerializer}
     )
     def post(self, request):
-        serializer = BusinessConfirmationDealSerializer(data=request.data)
+        serializer = NewBusinessConfirmationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

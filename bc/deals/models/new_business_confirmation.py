@@ -4,23 +4,8 @@ from django.db import models
 from django.core.validators import MinValueValidator
 
 
-class BusinessConfirmationDeal(models.Model):
-    DRAFT = "draft"
-    SUBMITTED = "submitted"
-    PROCESSING = "processing"
-    COMPLETED = "completed"
-    CANCELLED = "cancelled"
-
-    STATUS_CHOICES = [
-        (DRAFT, "Draft"),
-        (SUBMITTED, "Submitted"),
-        (PROCESSING, "Processing"),
-        (COMPLETED, "Completed"),
-        (CANCELLED, "Cancelled"),
-    ]
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
+class NewBusinessConfirmation(models.Model):
+    # Buyer & Seller
     seller = models.CharField(
         max_length=255, 
         default="Open Mineral",
@@ -31,6 +16,8 @@ class BusinessConfirmationDeal(models.Model):
         default="Company A, John Materials",
         help_text="Buyer company name"
     )
+
+    # Material
     material = models.CharField(
         max_length=255,
         help_text="Material type (e.g., Akzhal, Lead concentrate)"
@@ -42,11 +29,6 @@ class BusinessConfirmationDeal(models.Model):
         help_text="Quantity in specified unit"
     )
 
-    status = models.CharField(
-        max_length=50, 
-        choices=STATUS_CHOICES, 
-        default=DRAFT
-    )
     created_at = models.DateTimeField(
         auto_now_add=True,
         null=True,

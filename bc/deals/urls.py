@@ -1,16 +1,27 @@
 from django.urls import path
-from .views import BusinessConfirmationDealView, DropdownOptionView
+from .views import (NewBusinessConfirmationView, DropdownOptionView, 
+                    CommercialTermsView, AdditionalClauseView)
 
 
 urlpatterns = [
     path(
-        "business-confirmation-deals/", 
-        BusinessConfirmationDealView.as_view(), 
-        name="business-confirmation-deal"
+        "new-business-confirmations/", 
+        NewBusinessConfirmationView.as_view(), 
+        name="new-business-confirmation"
     ),
     path(
         "dropdowns/", 
         DropdownOptionView.as_view(), 
         name="dropdown"
+    ),
+    path(
+        "commercial-terms/", 
+        CommercialTermsView.as_view(), 
+        name="commercial-terms"
+    ),
+    path(
+        "additional-clauses/", 
+        AdditionalClauseView.as_view(), 
+        name="additional-clauses"
     ),
 ]

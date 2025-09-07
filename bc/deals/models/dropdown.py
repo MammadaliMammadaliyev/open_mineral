@@ -12,22 +12,23 @@ class DropdownOption(models.Model):
         null=True,
         help_text="Display value (e.g., {\"akzhal\": \"Akzhal\", \"dap\": \"DAP (Delivered at Place)\"})"
     )
-    display_order = models.IntegerField(
+    display_order = models.IntegerField( # maybe replace by step_number
         default=0,
         blank=True,
         null=True,
         help_text="Order for display"
     )
+    tooltip_text = models.TextField(
+        blank=True, 
+        null=True,
+        help_text="Tooltip content for info icon"
+    )
+
     is_active = models.BooleanField(
         default=True,
         blank=True,
         null=True,
         help_text="Whether this option is active"
-    )
-    tooltip_text = models.TextField(
-        blank=True, 
-        null=True,
-        help_text="Tooltip content for info icon"
     )
 
     class Meta:
