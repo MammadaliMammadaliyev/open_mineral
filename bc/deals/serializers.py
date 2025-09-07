@@ -29,6 +29,16 @@ class AdditionalClauseSerializer(serializers.ModelSerializer):
 
 
 class PaymentTermsSerializer(serializers.ModelSerializer):
+    # prepayment_percentage = serializers.DecimalField(
+    #     max_digits=5, decimal_places=2, required=False
+    # )
+    # buyer_cost_share_percentage = serializers.DecimalField(
+    #     max_digits=5, decimal_places=2, required=False
+    # )
+    # seller_cost_share_percentage = serializers.DecimalField(
+    #     max_digits=5, decimal_places=2, required=False
+    # )
+
     class Meta:
         model = PaymentTerms
         fields = "__all__"

@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (NewBusinessConfirmationView, DropdownOptionView, 
-                    CommercialTermsView, AdditionalClauseView)
+                    CommercialTermsView, AdditionalClauseView,
+                    PaymentTermsView)
 
 
 urlpatterns = [
@@ -23,5 +24,10 @@ urlpatterns = [
         "additional-clauses/", 
         AdditionalClauseView.as_view(), 
         name="additional-clauses"
+    ),
+    path(
+        "payment-terms/", 
+        PaymentTermsView.as_view(), 
+        name="payment-terms"
     ),
 ]

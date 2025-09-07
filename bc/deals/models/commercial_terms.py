@@ -146,7 +146,7 @@ class CommercialTerms(models.Model):
         blank=True,
         help_text="Date and time when the commercial terms were last updated",
     )
-    
+
     class Meta:
         verbose_name = "Commercial Terms"
         verbose_name_plural = "Commercial Terms"

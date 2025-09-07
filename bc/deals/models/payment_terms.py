@@ -110,5 +110,5 @@ class PaymentTerms(models.Model):
         verbose_name_plural = "Payment Terms"
     
     def __str__(self):
-        return f"Payment Terms for Deal {self.business_confirmation_deal.id}"
+        return f"Payment Terms {self.id} for Deal"
     
