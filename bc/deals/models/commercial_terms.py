@@ -8,6 +8,12 @@ class AdditionalClause(models.Model):
         blank=True,
         help_text="Additional clause"
     )
+    display_order = models.IntegerField(
+        default=0,
+        null=True,
+        blank=True,
+        help_text="Order for display"
+    )
 
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -23,6 +29,7 @@ class AdditionalClause(models.Model):
     )
 
     class Meta:
+        ordering = ["display_order"]
         verbose_name = "Additional Clause"
         verbose_name_plural = "Additional Clauses"
 
@@ -152,5 +159,5 @@ class CommercialTerms(models.Model):
         verbose_name_plural = "Commercial Terms"
 
     def __str__(self):
-        return f"Commercial Terms for Business Confirmation {self.business_confirmation_deal.id}"
+        return f"Commercial Terms for Business Confirmation {self.id}"
     

@@ -35,9 +35,9 @@ class PaymentTermsSerializer(serializers.ModelSerializer):
 
 
 class BusinessConfirmationDealSerializer(serializers.ModelSerializer):
-    new_business_confirmation = NewBusinessConfirmationSerializer()
-    commercial_terms = CommercialTermsSerializer()
-    payment_terms = PaymentTermsSerializer()
+    # new_business_confirmation = NewBusinessConfirmationSerializer()
+    # commercial_terms = CommercialTermsSerializer()
+    # payment_terms = PaymentTermsSerializer()
 
     class Meta:
         model = BusinessConfirmationDeal

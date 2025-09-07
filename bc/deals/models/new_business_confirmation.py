@@ -44,8 +44,8 @@ class NewBusinessConfirmation(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
-        verbose_name = "Deal"
-        verbose_name_plural = "Deals"
-    
+        verbose_name = "New Business Confirmation"
+        verbose_name_plural = "New Business Confirmations"
+
     def __str__(self):
-        return f"Deal {self.id}: {self.buyer} - {self.material}"
+        return f"New Business Confirmation {self.id}: {self.buyer} - {self.material}"

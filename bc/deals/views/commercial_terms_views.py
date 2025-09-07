@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
 
 from deals.serializers import CommercialTermsSerializer, AdditionalClauseSerializer
-from deals.models import AdditionalClause
+from deals.models import AdditionalClause, CommercialTerms
 
 
 class CommercialTermsView(APIView):
@@ -13,6 +13,15 @@ class CommercialTermsView(APIView):
     API endpoint that allows commercial terms to be viewed or created.
     """
     permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_description="Get all commercial terms",
+        responses={200: CommercialTermsSerializer(many=True)}
+    )
+    def get(self, request):
+        commercial_terms = CommercialTerms.objects.all()
+        serializer = CommercialTermsSerializer(commercial_terms, many=True)
+        return Response(serializer.data)
 
     @swagger_auto_schema(
         operation_description="Create a new commercial terms",

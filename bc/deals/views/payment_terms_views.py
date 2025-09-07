@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from deals.serializers import PaymentTermsSerializer
 from drf_yasg.utils import swagger_auto_schema
+from deals.models import PaymentTerms
 
 
 class PaymentTermsView(APIView):
@@ -12,6 +13,15 @@ class PaymentTermsView(APIView):
     API endpoint that allows payment terms to be viewed or created.
     """
     permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(
+        operation_description="Get all payment terms",
+        responses={200: PaymentTermsSerializer(many=True)}
+    )
+    def get(self, request):
+        payment_terms = PaymentTerms.objects.all()
+        serializer = PaymentTermsSerializer(payment_terms, many=True)
+        return Response(serializer.data)
 
     @swagger_auto_schema(
         operation_description="Create a new payment terms",
