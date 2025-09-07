@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (NewBusinessConfirmationView, DropdownOptionView, CommercialTermsView, 
                     AdditionalClauseView, PaymentTermsView, BusinessConfirmationDealView,
-                    AISuggestionsView, AISuggestionsBatchView)
+                    AISuggestionsView)
 
 
 app_name = "deals"
@@ -41,10 +41,5 @@ urlpatterns = [
         "ai-suggestions/", 
         AISuggestionsView.as_view(), 
         name="ai-suggestions"
-    ),
-    path(
-        "ai-suggestions/batch/", 
-        AISuggestionsBatchView.as_view(), 
-        name="ai-suggestions-batch"
-    ),
+    )
 ]

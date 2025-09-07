@@ -5,14 +5,14 @@ class AISuggestionsService:
     """
     Singleton AI service that provides hardcoded suggestions for commercial terms fields
     """
-    
+
     _instance = None
-    
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(AISuggestionsService, cls).__new__(cls)
         return cls._instance
-    
+
     def get_suggestion(
         self,
         field_name: str,

@@ -56,19 +56,3 @@ class BusinessConfirmationDealSerializer(serializers.ModelSerializer):
     class Meta:
         model = BusinessConfirmationDeal
         fields = "__all__"
-
-
-class AISuggestionSerializer(serializers.Serializer):
-    """
-    Serializer for AI suggestion responses
-    """
-    type = serializers.ChoiceField(choices=['info', 'warning', 'error'])
-    message = serializers.CharField(max_length=500)
-    suggested_value = serializers.DecimalField(max_digits=10, decimal_places=2, allow_null=True, required=False)
-    show_accept_button = serializers.BooleanField(default=False)
-    suggested_options = serializers.ListField(
-        child=serializers.CharField(max_length=100),
-        allow_null=True,
-        required=False
-    )
-    warning_type = serializers.CharField(max_length=50, allow_null=True, required=False)
