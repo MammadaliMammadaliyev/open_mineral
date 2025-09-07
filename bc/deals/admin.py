@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Deal, DropdownOption
+from .models import BusinessConfirmationDeal, DropdownOption
 
 
-admin.site.register(Deal)
+admin.site.register(BusinessConfirmationDeal)
 admin.site.register(DropdownOption) 

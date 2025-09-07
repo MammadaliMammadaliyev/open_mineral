@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Deal, DropdownOption
+from .models import BusinessConfirmationDeal, DropdownOption
 
 
-class DealSerializer(serializers.ModelSerializer):
+class BusinessConfirmationDealSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Deal
+        model = BusinessConfirmationDeal
         fields = "__all__"
 
 

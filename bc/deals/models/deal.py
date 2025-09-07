@@ -4,7 +4,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 
 
-class Deal(models.Model):
+class BusinessConfirmationDeal(models.Model):
     DRAFT = "draft"
     SUBMITTED = "submitted"
     PROCESSING = "processing"
@@ -47,8 +47,18 @@ class Deal(models.Model):
         choices=STATUS_CHOICES, 
         default=DRAFT
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True,
+        blank=True,
+        help_text="Date and time when the deal was created",
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        null=True,
+        blank=True,
+        help_text="Date and time when the deal was last updated",
+    )
 
     class Meta:
         ordering = ["-created_at"]
