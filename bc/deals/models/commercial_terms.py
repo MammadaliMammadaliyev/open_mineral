@@ -124,6 +124,7 @@ class CommercialTerms(models.Model):
         blank=True,
         help_text="Material complies with China import standards"
     )
+    # there is another boolean field for the buyer in Figma, but it's not visible in the design
 
     # Additional Terms
     clauses = models.JSONField(

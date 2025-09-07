@@ -46,6 +46,13 @@ class BusinessConfirmationDeal(models.Model):
         blank=True,
         related_name="business_confirmation_deal",
     )
+    payment_terms = models.OneToOneField(
+        "PaymentTerms", 
+        on_delete=models.SET_NULL, 
+        null=True,
+        blank=True,
+        related_name="business_confirmation_deal",
+    )
 
     status = models.CharField(
         max_length=50, 

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (NewBusinessConfirmation, DropdownOption, 
                      CommercialTerms, BusinessConfirmationDeal,
-                     AdditionalClause)
+                     AdditionalClause, PaymentTerms)
 
 
 class NewBusinessConfirmationSerializer(serializers.ModelSerializer):
@@ -25,6 +25,12 @@ class CommercialTermsSerializer(serializers.ModelSerializer):
 class AdditionalClauseSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdditionalClause
+        fields = ("clause",)
+
+
+class PaymentTermsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentTerms
         fields = "__all__"
 
 
