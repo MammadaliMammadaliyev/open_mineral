@@ -1,4 +1,4 @@
-from .deal_views import *
+from .new_business_confirmation_views import *
 from .dropdown_views import *
 from .commercial_terms_views import *
 from .payment_terms_views import *
