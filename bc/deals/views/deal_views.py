@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from drf_yasg.utils import swagger_auto_schema
 
-from .serializers import DealSerializer
+from deals.serializers import DealSerializer
 
 
 class DealView(APIView):

@@ -45,7 +45,6 @@ class Deal(models.Model):
         help_text="Quantity in specified unit"
     )
 
-    # Status and metadata
     status = models.CharField(
         max_length=50, 
         choices=STATUS_CHOICES, 
