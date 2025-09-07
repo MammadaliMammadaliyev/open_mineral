@@ -1,14 +1,7 @@
-"""
-Dropdown Options Model
-
-Handles all dropdown/select options for form fields across the application.
-"""
-
 from django.db import models
 
 
 class DropdownOption(models.Model):
-    """Model to store all dropdown options for the application"""
     field_name = models.CharField(
         max_length=100, 
         help_text='Field name (e.g., material, delivery_term)'
