@@ -5,32 +5,59 @@ from django.core.validators import MinValueValidator
 
 
 class Deal(models.Model):
+    DRAFT = "draft"
+    SUBMITTED = "submitted"
+    PROCESSING = "processing"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+
     STATUS_CHOICES = [
-        ('draft', 'Draft'),
-        ('submitted', 'Submitted'),
-        ('processing', 'Processing'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled'),
+        (DRAFT, "Draft"),
+        (SUBMITTED, "Submitted"),
+        (PROCESSING, "Processing"),
+        (COMPLETED, "Completed"),
+        (CANCELLED, "Cancelled"),
     ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     seller = models.CharField(
         max_length=255, 
-        default='Open Mineral',
-        help_text='Seller company name'
+        default="Open Mineral",
+        help_text="Seller company name",
     )
     buyer = models.CharField(
         max_length=255,
-        help_text='Buyer company name'
+        default="Company A, John Materials",
+        help_text="Buyer company name"
     )
     material = models.CharField(
         max_length=255,
-        help_text='Material type (e.g., Akzhal, Lead concentrate)'
+        help_text="Material type (e.g., Akzhal, Lead concentrate)"
+    )
+    material_tooltip = models.TextField(
+        help_text="Material type (e.g., Akzhal, Lead concentrate)",
     )
     quantity = models.DecimalField(
         max_digits=10, 
         decimal_places=2,
         validators=[MinValueValidator(0.01)],
-        help_text='Quantity in specified unit'
+        help_text="Quantity in specified unit"
     )
+
+    # Status and metadata
+    status = models.CharField(
+        max_length=50, 
+        choices=STATUS_CHOICES, 
+        default=DRAFT
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Deal"
+        verbose_name_plural = "Deals"
+    
+    def __str__(self):
+        return f"Deal {self.id}: {self.buyer} - {self.material}"

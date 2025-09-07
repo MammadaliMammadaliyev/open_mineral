@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Deal, DropdownOption
 
-# Register your models here.
+
+admin.site.register(Deal)
+admin.site.register(DropdownOption)
