@@ -14,13 +14,6 @@ class DealView(APIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
-        operation_description="Get all deals",
-        responses={200: DealSerializer(many=True)}
-    )
-    def get(self, request):
-        return Response({"message": "Hello, world!"}, status=status.HTTP_200_OK)
-    
-    @swagger_auto_schema(
         operation_description="Create a new deal",
         request_body=DealSerializer,
         responses={201: DealSerializer}

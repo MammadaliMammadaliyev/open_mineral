@@ -3,4 +3,4 @@ from .models import Deal, DropdownOption
 
 
 admin.site.register(Deal)
-admin.site.register(DropdownOption)
+admin.site.register(DropdownOption) 

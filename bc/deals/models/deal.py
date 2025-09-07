@@ -18,7 +18,7 @@ class Deal(models.Model):
         (COMPLETED, "Completed"),
         (CANCELLED, "Cancelled"),
     ]
-    
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     seller = models.CharField(
@@ -34,9 +34,6 @@ class Deal(models.Model):
     material = models.CharField(
         max_length=255,
         help_text="Material type (e.g., Akzhal, Lead concentrate)"
-    )
-    material_tooltip = models.TextField(
-        help_text="Material type (e.g., Akzhal, Lead concentrate)",
     )
     quantity = models.DecimalField(
         max_digits=10, 
