@@ -1,0 +1,194 @@
+pipeline {
+    agent any
+    
+    environment {
+        PYTHON_VERSION = '3.11'
+        DOCKER_REGISTRY = 'your-registry.com'
+        IMAGE_NAME = 'open-mineral/bc'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Setup') {
+            steps {
+                sh '''
+                    python -m venv venv
+                    source venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                    pip install pytest pytest-django pytest-cov flake8 black isort safety bandit
+                '''
+            }
+        }
+        
+        stage('Lint') {
+            steps {
+                sh '''
+                    source venv/bin/activate
+                    flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+                    flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+                    black --check .
+                    isort --check-only .
+                '''
+            }
+        }
+        
+        stage('Security Scan') {
+            steps {
+                sh '''
+                    source venv/bin/activate
+                    safety check
+                    bandit -r bc/ -f json -o bandit-report.json
+                '''
+            }
+            post {
+                always {
+                    publishHTML([
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: '.',
+                        reportFiles: 'bandit-report.json',
+                        reportName: 'Security Scan Report'
+                    ])
+                }
+            }
+        }
+        
+        stage('Test') {
+            parallel {
+                stage('Unit Tests') {
+                    steps {
+                        sh '''
+                            source venv/bin/activate
+                            cd bc
+                            python manage.py migrate
+                            python manage.py test --verbosity=2
+                        '''
+                    }
+                }
+                
+                stage('Integration Tests') {
+                    steps {
+                        sh '''
+                            source venv/bin/activate
+                            cd bc
+                            python manage.py migrate
+                            python manage.py test --verbosity=2 --settings=bc.settings_test
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Coverage') {
+            steps {
+                sh '''
+                    source venv/bin/activate
+                    cd bc
+                    coverage run --source='.' manage.py test
+                    coverage report
+                    coverage xml
+                '''
+            }
+            post {
+                always {
+                    publishCoverage adapters: [
+                        coberturaAdapter('bc/coverage.xml')
+                    ], sourceFileResolver: sourceFiles('STORE_LAST_BUILD')
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'develop'
+                }
+            }
+            steps {
+                script {
+                    def imageTag = "${env.DOCKER_REGISTRY}/${env.IMAGE_NAME}:${env.BUILD_NUMBER}"
+                    def latestTag = "${env.DOCKER_REGISTRY}/${env.IMAGE_NAME}:latest"
+                    
+                    sh "docker build -t ${imageTag} ."
+                    sh "docker tag ${imageTag} ${latestTag}"
+                }
+            }
+        }
+        
+        stage('Push Docker Image') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'develop'
+                }
+            }
+            steps {
+                script {
+                    def imageTag = "${env.DOCKER_REGISTRY}/${env.IMAGE_NAME}:${env.BUILD_NUMBER}"
+                    def latestTag = "${env.DOCKER_REGISTRY}/${env.IMAGE_NAME}:latest"
+                    
+                    sh "docker push ${imageTag}"
+                    sh "docker push ${latestTag}"
+                }
+            }
+        }
+        
+        stage('Deploy to Staging') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                script {
+                    sh '''
+                        echo "Deploying to staging environment..."
+                        # Add your staging deployment commands here
+                        # Example: kubectl apply -f k8s/staging/
+                    '''
+                }
+            }
+        }
+        
+        stage('Deploy to Production') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    sh '''
+                        echo "Deploying to production environment..."
+                        # Add your production deployment commands here
+                        # Example: kubectl apply -f k8s/production/
+                    '''
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            emailext (
+                subject: "Build Successful: ${env.JOB_NAME} - ${env.BUILD_NUMBER}",
+                body: "Build ${env.BUILD_NUMBER} completed successfully.",
+                to: "${env.CHANGE_AUTHOR_EMAIL}"
+            )
+        }
+        failure {
+            emailext (
+                subject: "Build Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER}",
+                body: "Build ${env.BUILD_NUMBER} failed. Please check the console output.",
+                to: "${env.CHANGE_AUTHOR_EMAIL}"
+            )
+        }
+    }
+}
