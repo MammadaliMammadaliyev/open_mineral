@@ -33,11 +33,14 @@ services:
     container_name: open_mineral_web
     command: >
       sh -c "cd bc && python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
              gunicorn --bind 0.0.0.0:8000 --workers 3 bc.wsgi:application"
     env_file:
       - .env
     volumes:
       - .:/app
+      - static_volume:/app/static
+  
       - media_volume:/app/media
       - logs_volume:/app/logs
     ports:
@@ -66,10 +69,26 @@ services:
       - open_mineral_network
     restart: unless-stopped
 
+  nginx:
+    image: nginx:alpine
+    container_name: open_mineral_nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/app/static
+      - media_volume:/app/media
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    networks:
+      - open_mineral_network
+
 volumes:
   postgres_data:
     driver: local
   redis_data:
+    driver: local
+  static_volume:
     driver: local
   media_volume:
     driver: local

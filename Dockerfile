@@ -6,6 +6,7 @@ ENV DJANGO_SETTINGS_MODULE=bc.settings
 
 WORKDIR /app
 
+
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         postgresql-client \
@@ -13,11 +14,15 @@ RUN apt-get update \
         libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
+
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . /app/
 
-RUN mkdir -p /app/logs
+RUN mkdir -p /app/logs /app/static /app/media
+
+RUN python manage.py collectstatic --noinput
 
 RUN adduser --disabled-password --gecos '' appuser && \
     chown -R appuser:appuser /app

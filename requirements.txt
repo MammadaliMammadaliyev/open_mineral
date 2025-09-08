@@ -44,9 +44,3 @@ black==23.12.1
 isort==5.13.2
 flake8==7.0.0
 mypy==1.8.0
-bandit==1.7.5
-safety==2.3.5
-pre-commit==3.6.0
-django-stubs==4.2.7
-types-requests==2.31.0.10
-

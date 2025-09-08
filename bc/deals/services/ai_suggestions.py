@@ -23,17 +23,17 @@ class AISuggestionsService:
     ) -> Optional[Dict[str, Any]]:
         """
         Get AI suggestion for a specific field
-        
+
         Args:
             field_name: Name of the field (e.g., 'prepayment', 'treatment_charge', etc.)
             field_value: Current value entered by user
             material: Material type for context (optional)
             transport_mode: Transport mode for context (optional)
-        
+
         Returns:
             Dictionary with suggestion data or None if no suggestion
         """
-        
+
         # Hardcoded suggestions for specific fields
         suggestions = {
             'prepayment': {
