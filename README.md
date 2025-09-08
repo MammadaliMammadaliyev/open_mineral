@@ -572,3 +572,59 @@ For issues and questions:
 ---
 
 **Happy Trading! 🚀**
+
+## 🔐 Authentication Requirements
+
+**IMPORTANT**: All API endpoints require authentication. You must be logged in to access any endpoint.
+
+### Creating a Superuser
+
+1. **Using Docker (Recommended)**:
+   ```bash
+   # Start the services
+   docker compose up -d
+   
+   # Create superuser
+   docker compose exec web python manage.py createsuperuser
+   # Follow prompts to create admin user
+   ```
+
+2. **Using Local Development**:
+   ```bash
+   cd bc
+   python manage.py createsuperuser
+   ```
+
+### Testing Endpoints via Swagger
+
+1. **Access Swagger UI**: http://localhost:8000/swagger/
+2. **Login to Django Admin**: http://localhost:8000/admin/
+3. **Use Swagger Authentication**:
+   - Click "Authorize" button in Swagger UI
+   - Use your superuser credentials
+   - Or use session authentication by logging in via Django admin first
+
+### API Authentication Methods
+
+- **Session Authentication**: Login via Django admin, then use Swagger
+- **Token Authentication**: Use Django REST Framework tokens
+- **Basic Authentication**: Username/password for API calls
+
+### Testing Endpoints
+
+All endpoints in the API documentation require authentication. Without proper authentication, you'll receive `401 Unauthorized` responses.
+
+**Available Endpoints**:
+- `GET /api/new-business-confirmations/` - List business confirmations
+- `POST /api/new-business-confirmations/` - Create business confirmation
+- `GET /api/commercial-terms/` - List commercial terms
+- `POST /api/commercial-terms/` - Create commercial terms
+- `GET /api/payment-terms/` - List payment terms
+- `POST /api/payment-terms/` - Create payment terms
+- `GET /api/dropdowns/` - Get dropdown options
+- `GET /api/business-confirmation-deals/` - List deals
+- `POST /api/business-confirmation-deals/` - Create deal
+- `POST /api/ai-suggestions/` - Get AI suggestions
+- `POST /api/deals/{deal_id}/submit/` - Submit deal
+- `GET /api/task-status/{task_id}/` - Get task status
+
