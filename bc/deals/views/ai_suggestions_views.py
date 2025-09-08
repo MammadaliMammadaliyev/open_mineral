@@ -1,3 +1,4 @@
+import logging
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,6 +7,9 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from deals.services.ai_suggestions import ai_suggestions_service
+from deals.response_messages import ResponseMessages
+
+logger = logging.getLogger("deals")
 
 
 class AISuggestionsView(APIView):
@@ -66,22 +70,26 @@ class AISuggestionsView(APIView):
         """
         field_name = request.query_params.get('field_name')
         field_value = request.query_params.get('field_value')
+        logger.info(f"User {request.user} requested AI suggestion for field {field_name} with value {field_value}")
         
         if not field_name or field_value is None:
             return Response(
-                {'error': 'field_name and field_value are required parameters'},
+                {'error': ResponseMessages.MISSING_REQUIRED_PARAMETERS},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
+        logger.info(f"Getting AI suggestion for field {field_name} with value {field_value}")
         suggestion = ai_suggestions_service.get_suggestion(
             field_name=field_name,
             field_value=field_value
         )
 
         if suggestion:
+            logger.info(f"AI suggestion for field {field_name} with value {field_value} found")
             return Response(suggestion, status=status.HTTP_200_OK)
         else:
+            logger.info(f"No AI suggestion found for field {field_name} with value {field_value}")
             return Response(
-                {'message': 'No suggestions available for this field'},
+                {'message': ResponseMessages.NO_SUGGESTIONS_AVAILABLE},
                 status=status.HTTP_200_OK
             )
