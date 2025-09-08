@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (NewBusinessConfirmationView, DropdownOptionView, CommercialTermsView, 
                     AdditionalClauseView, PaymentTermsView, BusinessConfirmationDealView,
-                    AISuggestionsView)
+                    AISuggestionsView, SubmitDealView, TaskStatusView)
 
 
 app_name = "deals"
@@ -41,5 +41,15 @@ urlpatterns = [
         "ai-suggestions/", 
         AISuggestionsView.as_view(), 
         name="ai-suggestions"
+    ),
+    path(
+        "deals/<uuid:deal_id>/submit/", 
+        SubmitDealView.as_view(), 
+        name="submit-deal"
+    ),
+    path(
+        "task-status/<uuid:task_status_id>/", 
+        TaskStatusView.as_view(), 
+        name="task-status"
     )
 ]

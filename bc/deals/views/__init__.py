@@ -4,7 +4,8 @@ from .commercial_terms_views import *
 from .payment_terms_views import *
 from .bc_deal_views import *
 from .ai_suggestions_views import *
+from .submit_views import *
 
 __all__ = ["NewBusinessConfirmationView", "DropdownOptionView", "CommercialTermsView",
            "AdditionalClauseView", "PaymentTermsView", "BusinessConfirmationDealView",
-           "AISuggestionsView", "AISuggestionsBatchView"]
+           "AISuggestionsView", "SubmitDealView", "TaskStatusView"]
