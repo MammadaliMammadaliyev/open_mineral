@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: open_mineral_db
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - open_mineral_network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: open_mineral_redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - open_mineral_network
+    restart: unless-stopped
+
+  web:
+    build:
+      dockerfile: Dockerfile
+    container_name: open_mineral_web
+    command: >
+      sh -c "cd bc && python manage.py migrate &&
+             gunicorn --bind 0.0.0.0:8000 --workers 3 bc.wsgi:application"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - media_volume:/app/media
+      - logs_volume:/app/logs
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - open_mineral_network
+    restart: unless-stopped
+
+  celery:
+    build: .
+    container_name: open_mineral_celery
+    command: >
+      sh -c "cd bc && celery -A bc worker --loglevel=info"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - logs_volume:/app/logs
+    depends_on:
+      - db
+      - redis
+    networks:
+      - open_mineral_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  media_volume:
+    driver: local
+  logs_volume:
+    driver: local
+
+networks:
+  open_mineral_network:
+    driver: bridge

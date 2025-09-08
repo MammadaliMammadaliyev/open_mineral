@@ -25,14 +25,12 @@ load_dotenv(BASE_DIR / '.env')
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-^16gv%(+fys7^!u=wj-#ie*1m#o%7#3w%bj7y#gec8uojy*n3p"
+SECRET_KEY = os.getenv('SECRET_KEY', "django-insecure-^16gv%(+fys7^!u=wj-#ie*1m#o%7#3w%bj7y#gec8uojy*n3p")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 'yes')
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
 
 
 # Application definition
@@ -95,13 +93,23 @@ WSGI_APPLICATION = "bc.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("DB_NAME", "open_mineral"),
+#         "USER": os.getenv("DB_USER", "postgres"),
+#         "PASSWORD": os.getenv("DB_PASSWORD", "postgres"),
+#         "HOST": os.getenv("DB_HOST", "db"),
+#         "PORT": os.getenv("DB_PORT", "5432"),
+#     }
+# }
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",  # This will create db.sqlite3 in your project root
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -138,6 +146,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -154,15 +163,15 @@ REST_FRAMEWORK = {
 }
 
 # Celery
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://redis:6379/0')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://redis:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
 # Redis
-REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+REDIS_URL = os.getenv('REDIS_URL', 'redis://redis:6379/0')
 
 # Logging
 LOGGING = {
@@ -211,7 +220,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": os.getenv("REDIS_URL", "redis://localhost:6379/1"),
+        "LOCATION": os.getenv("REDIS_URL", "redis://redis:6379/1"),
         "KEY_PREFIX": "bc_cache",
         "TIMEOUT": 300,  # 5 minutes default timeout
     }
@@ -233,3 +242,15 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
+
+
+# S3 Settings
+# AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+# AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+# AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
+# AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
+# AWS_S3_OBJECT_PARAMETERS = {
+#     'CacheControl': 'max-age=86400',
+# }
+
