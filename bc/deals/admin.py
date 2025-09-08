@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.utils.html import format_html
 
 from .models import (DropdownOption, NewBusinessConfirmation, CommercialTerms, 
-                     AdditionalClause, PaymentTerms, BusinessConfirmationDeal)
+                     AdditionalClause, PaymentTerms, BusinessConfirmationDeal, 
+                     TaskStatus)
 
 
 @admin.register(AdditionalClause)
@@ -306,3 +307,44 @@ class BusinessConfirmationDealAdmin(admin.ModelAdmin):
         "commercial_terms",
         "payment_terms",
     )
+
+
+@admin.register(TaskStatus)
+class TaskStatusAdmin(admin.ModelAdmin):
+    list_display = ("id", "task_id", "deal", "status", "created_at", "updated_at")
+    list_filter = ("status", "created_at", "updated_at")
+    search_fields = ("task_id", "deal__id", "deal__user__username")
+    readonly_fields = ("created_at", "updated_at")
+    ordering = ("-created_at",)
+    date_hierarchy = "created_at"
+    autocomplete_fields = ("deal",)
+
+    def get_queryset(self, request):
+        """Optimize queryset with select_related if needed (for future FKs)."""
+        return super().get_queryset(request)
+
+    def deal_display(self, obj):
+        """Display deal information in list view."""
+        if not obj.deal:
+            return "-"
+        return f"{obj.deal.id} - {obj.deal.user.username}"
+    deal_display.short_description = "Deal"
+
+    def task_id_display(self, obj):
+        """Display task ID in list view."""
+        if not obj.task_id:
+            return "-"
+        return obj.task_id[:8] + ("..." if len(obj.task_id) > 8 else "")
+    task_id_display.short_description = "Task ID"
+
+    def status_display(self, obj):
+        """Display status with color-coded badge."""
+        if obj.status == TaskStatus.PENDING:
+            return format_html('<span style="color: #ffc107;">{}</span>', obj.get_status_display())
+        elif obj.status == TaskStatus.PROCESSING:
+            return format_html('<span style="color: #28a745;">{}</span>', obj.get_status_display())
+        elif obj.status == TaskStatus.COMPLETED:
+            return format_html('<span style="color: #17a2b8;">{}</span>', obj.get_status_display())
+        elif obj.status == TaskStatus.FAILED:
+            return format_html('<span style="color: #dc3545;">{}</span>', obj.get_status_display())
+        return obj.get_status_display()

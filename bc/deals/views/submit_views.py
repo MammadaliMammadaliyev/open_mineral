@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from deals.models import BusinessConfirmationDeal, TaskStatus
 from deals.tasks.processing_tasks import process_business_confirmation_deal
 from rest_framework.throttling import UserRateThrottle
+from deals.response_messages import ResponseMessages
 
 logger = logging.getLogger("deals")
 
@@ -57,7 +58,7 @@ class SubmitDealView(APIView):
             # Check if deal is in a valid state for submission
             if deal.status not in [BusinessConfirmationDeal.DRAFT, BusinessConfirmationDeal.CANCELLED]:
                 return Response(
-                    {"error": "Deal is already submitted or processed"},
+                    {"error": ResponseMessages.DEAL_ALREADY_SUBMITTED},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
@@ -65,7 +66,7 @@ class SubmitDealView(APIView):
             task_status = TaskStatus.objects.create(
                 deal=deal,
                 status=TaskStatus.PENDING,
-                message="Task queued for processing"
+                message=ResponseMessages.TASK_QUEUED_FOR_PROCESSING
             )
             
             # Update deal status to submitted
@@ -85,7 +86,7 @@ class SubmitDealView(APIView):
             logger.info(f"Deal {deal_id} submitted for processing by user {request.user}, task {task.id}")
             
             return Response({
-                "message": "Deal submitted successfully for processing",
+                "message": ResponseMessages.DEAL_SUBMITTED_SUCCESSFULLY,
                 "task_id": task.id,
                 "task_status_id": str(task_status.id),
                 "status": "submitted"
@@ -94,7 +95,7 @@ class SubmitDealView(APIView):
         except Exception as e:
             logger.error(f"Error submitting deal {deal_id}: {str(e)}")
             return Response(
-                {"error": "Failed to submit deal for processing"},
+                {"error": ResponseMessages.DEAL_SUBMISSION_FAILED},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -155,6 +156,6 @@ class TaskStatusView(APIView):
         except Exception as e:
             logger.error(f"Error retrieving task status {task_status_id}: {str(e)}")
             return Response(
-                {"error": "Failed to retrieve task status"},
+                {"error": ResponseMessages.TASK_STATUS_RETRIEVAL_FAILED},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )

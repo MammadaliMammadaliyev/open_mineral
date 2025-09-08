@@ -1,3 +1,18 @@
 class ResponseMessages:
     NO_SUGGESTIONS_AVAILABLE = "No suggestions available for this field"
     MISSING_REQUIRED_PARAMETERS = "field_name and field_value are required parameters"
+
+    DEAL_NOT_FOUND = "Deal not found"
+    DEAL_ALREADY_SUBMITTED = "Deal already submitted"
+    DEAL_INVALID_STATUS = "Deal is not in a valid state for submission"
+    DEAL_SUBMISSION_FAILED = "Failed to submit deal for processing"
+    TASK_STATUS_NOT_FOUND = "Task status not found"
+    TASK_STATUS_NOT_IN_PENDING_STATE = "Task is not in pending state"
+    TASK_STATUS_NOT_IN_PROCESSING_STATE = "Task is not in processing state"
+    TASK_STATUS_NOT_IN_COMPLETED_STATE = "Task is not in completed state"
+    TASK_STATUS_NOT_IN_FAILED_STATE = "Task is not in failed state"
+    TASK_STATUS_RETRIEVAL_FAILED = "Failed to retrieve task status"
+    TASK_QUEUED_FOR_PROCESSING = "Task queued for processing"
+    TASK_STATUS_RETRIEVED_SUCCESSFULLY = "Task status retrieved successfully"
+    TASK_STATUS_RETRIEVAL_FAILED = "Failed to retrieve task status"
+    TASK_STATUS_RETRIEVAL_FAILED = "Failed to retrieve task status"
