@@ -52,24 +52,20 @@ class SubmitDealView(APIView):
     )
     def post(self, request, deal_id):
         try:
-            # Get the deal
             deal = get_object_or_404(BusinessConfirmationDeal, id=deal_id)
 
-            # Check if deal is in a valid state for submission
             if deal.status not in [BusinessConfirmationDeal.DRAFT, BusinessConfirmationDeal.CANCELLED]:
                 return Response(
                     {"error": ResponseMessages.DEAL_ALREADY_SUBMITTED},
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            # Create task status record
             task_status = TaskStatus.objects.create(
                 deal=deal,
                 status=TaskStatus.PENDING,
                 message=ResponseMessages.TASK_QUEUED_FOR_PROCESSING
             )
             
-            # Update deal status to submitted
             deal.status = BusinessConfirmationDeal.SUBMITTED
             deal.save()
             

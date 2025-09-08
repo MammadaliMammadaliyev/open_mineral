@@ -161,9 +161,8 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
+# Redis
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
-
-
 
 # Logging
 LOGGING = {
@@ -191,7 +190,7 @@ LOGGING = {
         },
     },
     "loggers": {
-        "deals": {  # app-specific logger
+        "deals": {
             "handlers": ["console", "file"],
             "level": "INFO",
             "propagate": False,
@@ -207,6 +206,21 @@ LOGGING = {
 # File Upload Settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+
+# Cache Configuration
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv("REDIS_URL", "redis://localhost:6379/1"),
+        "KEY_PREFIX": "bc_cache",
+        "TIMEOUT": 300,  # 5 minutes default timeout
+    }
+}
+
+# Cache-specific settings
+CACHE_MIDDLEWARE_ALIAS = "default"
+CACHE_MIDDLEWARE_SECONDS = 300
+CACHE_MIDDLEWARE_KEY_PREFIX = "bc"
 
 # Security Settings
 if not DEBUG:
